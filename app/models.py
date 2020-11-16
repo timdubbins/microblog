@@ -8,6 +8,7 @@ from hashlib import md5
 from app import db, login
 from app.search import add_to_index, remove_from_index, query_index
 
+
 class SearchableMixin(object):
     @classmethod
     def search(cls, expression, page, per_page):
@@ -51,12 +52,12 @@ db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
 
-
 followers = db.Table(
     'followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -119,6 +120,7 @@ class User(UserMixin, db.Model):
         except:
             return
         return User.query.get(id)
+
 
 class Post(SearchableMixin, db.Model):
     __searchable__ = ['body']
