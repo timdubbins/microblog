@@ -1,13 +1,14 @@
 from flask import render_template, flash, redirect, url_for, request
+from flask_babel import _
 from flask_login import current_user, login_user, logout_user
 from werkzeug.urls import url_parse
-from flask_babel import _
+
 from app import db
 from app.auth import bp
+from app.auth.email import send_password_reset_email
 from app.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User
-from app.auth.email import send_password_reset_email
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -26,6 +27,7 @@ def login():
             next_page = url_for('main.index')
         return redirect(next_page)
     return render_template('auth/login.html', title=_('Sign In'), form=form)
+
 
 @bp.route('/logout')
 def logout():
