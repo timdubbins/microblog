@@ -1,16 +1,16 @@
 from datetime import datetime
 
-from flask import render_template, flash, redirect, url_for, request, g, \
-    jsonify, current_app
+from flask import current_app, flash, g, jsonify, redirect, render_template, \
+    request, url_for
 from flask_babel import _, get_locale
 from flask_login import current_user, login_required
 from guess_language import guess_language
 
 from app import db
 from app.main import bp
-from app.main.forms import EditProfileForm, EmptyForm, PostForm, SearchForm, \
-    MessageForm
-from app.models import User, Post, Message, Notification
+from app.main.forms import EditProfileForm, EmptyForm, MessageForm, PostForm, \
+    SearchForm
+from app.models import Message, Notification, Post, User
 from app.translate import translate
 
 
@@ -145,7 +145,6 @@ def unfollow(username):
         redirect(url_for('main.index'))
 
 
-
 @bp.route('/translate', methods=['POST'])
 @login_required
 def translate_text():
@@ -203,7 +202,6 @@ def messages():
         if messages.has_prev else None
     return render_template('messages.html', messages=messages.items,
                            next_url=next_url, prev_url=prev_url)
-
 
 
 @bp.route('/export_posts')
