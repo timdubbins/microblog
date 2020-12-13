@@ -1,14 +1,17 @@
-from app import create_app, db
 import time
 from rq import get_current_job
-from app.models import Task, User, Post
 import sys
 import json
 from flask import render_template
+
+from app import create_app, db
 from app.email import send_email
+from app.models import Post, User, Task
+
 
 app = create_app()
 app.app_context().push()
+
 
 def _set_task_progress(progress):
     job = get_current_job()
@@ -21,6 +24,7 @@ def _set_task_progress(progress):
         if progress >= 100:
             task.complete = True
         db.session.commit()
+
 
 def export_posts(user_id):
     try:
@@ -35,7 +39,6 @@ def export_posts(user_id):
             time.sleep(5)
             i += 1
             _set_task_progress(100 * i // total_posts)
-
         send_email('[Microblog] Your blog posts',
                    sender=app.config['ADMINS'][0], recipients=[user.email],
                    text_body=render_template('email/export_posts.txt', user=user),
